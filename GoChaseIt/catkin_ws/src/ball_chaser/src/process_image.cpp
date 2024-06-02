@@ -36,10 +36,17 @@ uint32_t get_ball_loc(uint32_t (&white_pixel_map)[3]) {
     return max_index;
 }
 
+bool is_white_pixel(const sensor_msgs::Image& img, uint32_t index) {
+    constexpr uint8_t FULL_COLOR = 255;
+    return img.data[index] == FULL_COLOR 
+        && img.data[index + 1] == FULL_COLOR 
+        && img.data[index + 2] == FULL_COLOR;
+}
+
 // This callback function continuously executes and reads the image data
 void process_image_callback(const sensor_msgs::Image img)
 {
-    uint8_t white_pixel = 255;
+    
     uint32_t white_pixel_map[3] = {0, 0, 0};
     bool ball_exists = false;
 
@@ -49,10 +56,10 @@ void process_image_callback(const sensor_msgs::Image img)
     // Request a stop when there's no white ball seen by the camera
 
     for (uint32_t r = 0; r < img.height; ++r) {
-        for (uint32_t c = 0; c < img.step; ++c) {
-            const uint32_t index = r * img.step + c;
-            if (img.data[index] == white_pixel) {
-                ++white_pixel_map[get_loc_index(c, img.step)];
+        for (uint32_t c = 0; c < img.width; ++c) {
+            const uint32_t index = r * img.step + c * 3;
+            if (is_white_pixel(img, index)) {
+                ++white_pixel_map[get_loc_index(c, img.width)];
                 ball_exists = true;
             }
         }
