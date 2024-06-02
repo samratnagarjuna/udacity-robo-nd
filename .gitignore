@@ -1,2 +1,21 @@
-# Ignore build directories
+# Ignore build and development directories
 build/
+devel/
+install/
+
+# Ignore log files
+logs/
+
+# Ignore editor specific files
+*~
+*.swp
+*.bak
+
+# Ignore Python cache files
+__pycache__/
+
+# Ignore executables
+*.pyc
+*.pyo
+*.out
+*.o
